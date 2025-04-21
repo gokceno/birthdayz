@@ -1,5 +1,6 @@
 import { sqliteTable, text, int } from "drizzle-orm/sqlite-core";
 import { sql } from "drizzle-orm";
+import { DateTime } from "luxon";
 
 export const codes = sqliteTable("codes", {
   id: int("id").primaryKey({ autoIncrement: true }),
