@@ -1,40 +1,47 @@
 import { DateTime } from "luxon";
-import { and, eq, not, exists, gte, lte, isNull } from "drizzle-orm";
+import { and, eq, notExists, isNull, between } from "drizzle-orm";
 import { db, schema } from "./db";
 
-const pick = async (email: string): Code => {
-  const currentYear = DateTime.now().year;
-  const yearStart = DateTime.local(currentYear, 1, 1).startOf("day").toJSDate();
-  const yearEnd = DateTime.local(currentYear, 12, 31).endOf("day").toJSDate();
-
-  const result = await db
-    .select()
+const pick = async (email: string): Promise<Code> => {
+  const [result] = await db
+    .select({
+      code: schema.codes.code,
+      vendorName: schema.codes.vendorName,
+      vendorUrl: schema.codes.vendorUrl,
+    })
     .from(schema.codes)
     .where(
       and(
         isNull(schema.codes.giftedTo),
-        not(
-          exists(
-            db
-              .select()
-              .from(schema.codes)
-              .where(
-                and(
-                  eq(schema.codes.giftedTo, email),
-                  and(
-                    gte(schema.codes.giftedAt, yearStart),
-                    lte(schema.codes.giftedAt, yearEnd),
-                  ),
+        notExists(
+          db
+            .select()
+            .from(schema.codes)
+            .where(
+              and(
+                eq(schema.codes.giftedTo, email),
+                between(
+                  schema.codes.giftedAt,
+                  DateTime.now().startOf("year").toJSDate(),
+                  DateTime.now().endOf("year").toJSDate(),
                 ),
               ),
-          ),
+            ),
         ),
       ),
     )
-    .limit(1)
-    .get();
+    .limit(1);
+  return result;
 };
-const burn = async (code: Code) => {};
+const burn = async (code: string, email: string): Promise<void> => {
+  await db
+    .update(schema.codes)
+    .set({
+      giftedTo: email,
+      giftedAt: DateTime.now().toJSDate(),
+    })
+    .where(eq(schema.codes.code, code));
+};
 
 type Code = {
   code: string;

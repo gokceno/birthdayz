@@ -2,6 +2,7 @@ import { command, string } from "@drizzle-team/brocli";
 import { yaml as config, type Config, type TeamMember } from "../config";
 import { logger } from "../logger";
 import { DateTime } from "luxon";
+import { pick, burn, type Code } from "../codes";
 
 const send = command({
   name: "send",
@@ -26,14 +27,20 @@ const send = command({
     logger.info(
       `Found ${birthdays.length} birthday(s) for ${now.toFormat("MM-dd")}.`,
     );
-    birthdays.map(async (member) => {
+    for (const member of birthdays) {
       logger.info(`Found ${member.fullName}`);
+      const pickedTemplateParts: Code = await pick(member.email);
+      if (!pickedTemplateParts) {
+        logger.warn(
+          `Sending for ${member.email} failed. Either ran out of codes or already sent this year.`,
+        );
+        continue;
+      }
       const templateParams: Template = {
         firstname: member.fullName.split(" ")[0],
-        code: "1234567890",
-        vendorName: "Boyner",
-        vendorUrl: "http://www.boyner.com.tr",
+        ...pickedTemplateParts,
       };
+      logger.debug(JSON.stringify(templateParams));
       try {
         const body: string = JSON.stringify({
           Messages: [
@@ -48,6 +55,14 @@ const send = command({
                   Name: member.fullName,
                 },
               ],
+              /*
+              Bcc: [
+                {
+                  Email: env.mail.fromEmail,
+                  Name: env.mail.fromName,
+                },
+              ],
+              */
               TemplateID: env.mail.mjTemplateId,
               TemplateLanguage: true,
               Subject: `İyi ki varsın ${templateParams.firstname}`,
@@ -76,7 +91,8 @@ const send = command({
       } catch (e: any) {
         logger.error(e.message);
       }
-    });
+      await burn(pickedTemplateParts.code, member.email);
+    }
   },
 });
 
