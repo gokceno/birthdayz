@@ -1,0 +1,9 @@
+services:
+  reducer:
+    build: .
+    container_name: sender
+    command: src/index.ts send
+    volumes:
+      - ./db:/app/db
+      - ./birthdayz.yml:/app/birthdayz.yml
+    restart: unless-stopped
