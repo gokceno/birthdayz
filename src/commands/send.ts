@@ -3,6 +3,7 @@ import { yaml as config, type Config, type TeamMember } from "../config";
 import { logger } from "../logger";
 import { DateTime } from "luxon";
 import { pick, burn, type Code } from "../codes";
+import { createPayload, send as mjSend } from "../mailjet";
 
 const send = command({
   name: "send",
@@ -42,52 +43,14 @@ const send = command({
       };
       logger.debug(JSON.stringify(templateParams));
       try {
-        const body: string = JSON.stringify({
-          Messages: [
-            {
-              From: {
-                Email: env.mail.fromEmail,
-                Name: env.mail.fromName,
-              },
-              To: [
-                {
-                  Email: member.email,
-                  Name: member.fullName,
-                },
-              ],
-              /*
-              Bcc: [
-                {
-                  Email: env.mail.fromEmail,
-                  Name: env.mail.fromName,
-                },
-              ],
-              */
-              TemplateID: env.mail.mjTemplateId,
-              TemplateLanguage: true,
-              Subject: `İyi ki varsın ${templateParams.firstname}`,
-              Data: {},
-              Variables: templateParams,
-            },
-          ],
-        });
-        logger.debug(body);
-        const fetchResult = await fetch("https://api.mailjet.com/v3.1/send", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Basic ${Buffer.from(
-              `${env.mail.mjApiKey}:${env.mail.mjApiSecret}`,
-            ).toString("base64")}`,
-          },
+        const body: string = createPayload(env.mail, member, templateParams);
+        const mjResponse = await mjSend({
+          ...env.mail,
           body,
         });
-        if (!fetchResult.ok) {
-          throw new Error(`HTTP error: ${fetchResult.status}`);
-        }
-        const data = await fetchResult.json();
+        logger.debug(body);
+        logger.debug(JSON.stringify(mjResponse));
         logger.info(`Message sent to ${member.email}`);
-        logger.debug(JSON.stringify(data));
       } catch (e: any) {
         logger.error(e.message);
       }
