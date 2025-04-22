@@ -1,9 +1,9 @@
 import { command, string } from "@drizzle-team/brocli";
-import { yaml as config, type Config, type TeamMember } from "../config";
-import { logger } from "../logger";
+import { yaml as config, type Config, type TeamMember } from "../utils/config";
+import { logger } from "../utils/logger";
 import { DateTime } from "luxon";
 import { pick, burn, type Code } from "../codes";
-import { createPayload, send as mjSend } from "../mailjet";
+import { createPayload, send as mjSend } from "../utils/mailjet";
 
 const send = command({
   name: "send",

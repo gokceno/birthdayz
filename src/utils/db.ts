@@ -1,6 +1,6 @@
 import { drizzle } from "drizzle-orm/libsql";
 import { migrate } from "drizzle-orm/libsql/migrator";
-import * as schema from "./schema";
+import * as schema from "../schema";
 
 const db = drizzle(`file:./db/birthdayz.sqlite`);
 

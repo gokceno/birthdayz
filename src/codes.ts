@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
 import { and, eq, notExists, isNull, between } from "drizzle-orm";
-import { db, schema } from "./db";
+import { db, schema } from "./utils/db";
 
 const pick = async (email: string): Promise<Code> => {
   const [result] = await db
