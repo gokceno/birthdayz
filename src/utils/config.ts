@@ -51,23 +51,4 @@ const configSchema = z.object({
   ),
 });
 
-type TeamMember = {
-  fullName: string;
-  birthdate: string;
-  email: string;
-};
-
-type Mail = {
-  fromName: string;
-  fromEmail: string;
-  mjTemplateId: number;
-  mjApiKey: string;
-  mjApiSecret: string;
-};
-
-type Config = {
-  mail: Mail;
-  team: TeamMember[];
-};
-
-export { yaml, type Config, type TeamMember, type Mail };
+export { yaml };

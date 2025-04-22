@@ -1,9 +1,15 @@
 import { command, string } from "@drizzle-team/brocli";
-import { yaml as config, type Config, type TeamMember } from "../utils/config";
+import { yaml as config } from "../utils/config";
 import { logger } from "../utils/logger";
 import { DateTime } from "luxon";
-import { pick, burn, type Code } from "../codes";
+import { pick, burn } from "../codes";
 import { createPayload, send as mjSend } from "../utils/mailjet";
+import {
+  type Template,
+  type Config,
+  type TeamMember,
+  type Code,
+} from "../types";
 
 const send = command({
   name: "send",
@@ -18,7 +24,7 @@ const send = command({
     logger.debug(`Fetched ${env.team.length} record(s).`);
     const now = DateTime.local();
     const birthdays: TeamMember[] = env.team.filter(
-      ({ birthdate }: { birthdate: string }) => {
+      ({ birthdate }: TeamMember) => {
         return (
           now.toFormat("MM-dd") ===
           DateTime.fromISO(birthdate).toFormat("MM-dd")
@@ -58,12 +64,5 @@ const send = command({
     }
   },
 });
-
-type Template = {
-  firstname: string;
-  code: string;
-  vendorName: string;
-  vendorUrl: string;
-};
 
 export default send;

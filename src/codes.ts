@@ -1,6 +1,7 @@
 import { DateTime } from "luxon";
 import { and, eq, notExists, isNull, between } from "drizzle-orm";
 import { db, schema } from "./utils/db";
+import { type Code } from "types";
 
 const pick = async (email: string): Promise<Code> => {
   const [result] = await db
@@ -43,10 +44,4 @@ const burn = async (code: string, email: string): Promise<void> => {
     .where(eq(schema.codes.code, code));
 };
 
-type Code = {
-  code: string;
-  vendorName: string;
-  vendorUrl: string;
-};
-
-export { pick, burn, type Code };
+export { pick, burn };

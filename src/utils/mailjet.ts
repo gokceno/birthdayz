@@ -1,3 +1,10 @@
+import {
+  type SendParams,
+  type TeamMember,
+  type Mail,
+  type Template,
+} from "../types";
+
 const send = async ({
   mjApiKey,
   mjApiSecret,
@@ -19,7 +26,11 @@ const send = async ({
   return fetchResult.json();
 };
 
-const createPayload = (mail: any, member: any, templateParams: any): string => {
+const createPayload = (
+  mail: Mail,
+  member: TeamMember,
+  templateParams: Template,
+): string => {
   return JSON.stringify({
     Messages: [
       {
@@ -49,12 +60,6 @@ const createPayload = (mail: any, member: any, templateParams: any): string => {
       },
     ],
   });
-};
-
-type SendParams = {
-  mjApiKey: string;
-  mjApiSecret: string;
-  body: string;
 };
 
 export { createPayload, send };
