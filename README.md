@@ -94,7 +94,7 @@ services:
     container_name: sender
     command: src/index.ts send
     volumes:
-      - ./db:/app/db
+      - ./db/birthdayz.sqlite:/app/db/birthdayz.sqlite
       - ./birthdayz.yml:/app/birthdayz.yml
     restart: unless-stopped
 ```
