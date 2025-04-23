@@ -35,14 +35,14 @@ Create a `birthdayz.yml` in the root folder and fill it like:
 # CRON expression, twice a day should be enough.
 schedule: "* * * * *"
 mail:
-  from_name: BREW # Sender name
-  from_email: info@brewww.com # Sender e-mail
+  from_name: BAR FOO # Sender name
+  from_email: foo@foo.com # Sender e-mail
   mj_template_id: 1111 # MJ template ID
   mj_api_key: 111abc # MJ API key
   mj_api_secret: 111abc # MJ API secret
   # BCC for each mail sent (optional)
   bcc:
-    - gokcen@fastmail.com
+    - bar@foo.com
 team:
   - full_name: Foo Bar # Recipient name
     email: foo@bar.com # Recipient e-mail
