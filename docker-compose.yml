@@ -1,5 +1,5 @@
 services:
-  reducer:
+  sender:
     build: .
     container_name: sender
     command: src/index.ts send

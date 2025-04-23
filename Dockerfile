@@ -1,14 +1,7 @@
-FROM python:slim-bullseye AS base
-
-RUN apt-get update && apt-get install -y curl unzip
-
-RUN curl -fsSL https://bun.sh/install | bash && \
-    ln -s $HOME/.bun/bin/bun /usr/local/bin/bun
-
-FROM base AS install
+FROM oven/bun:1 AS install
 
 WORKDIR /app
-COPY package.json .
+COPY package.json bun.lockb ./
 RUN bun install
 
 FROM install AS run
