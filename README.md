@@ -80,3 +80,21 @@ Then follow the logs with:
 ```bash
 docker compose logs --follow
 ```
+
+### Running with Images
+
+If you don't want to use the source you can always use the images from GHCR.
+
+Create a `docker-compose.yml` with the following and start it as usual.
+
+```YAML
+services:
+  sender:
+    image: ghcr.io/gokceno/birthdayz:latest
+    container_name: sender
+    command: src/index.ts send
+    volumes:
+      - ./db:/app/db
+      - ./birthdayz.yml:/app/birthdayz.yml
+    restart: unless-stopped
+```
