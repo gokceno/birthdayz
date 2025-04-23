@@ -47,8 +47,6 @@ const createPayload = (
         Bcc: [...(mail.bcc ? mail.bcc.map((email) => ({ Email: email })) : [])],
         TemplateID: mail.mjTemplateId,
         TemplateLanguage: true,
-        Subject: `İyi ki varsın ${templateParams.firstname}`,
-        Data: {},
         Variables: templateParams,
       },
     ],
