@@ -62,8 +62,9 @@ const send = command({
           logger.info(`Message sent to ${member.email}`);
         } catch (e: any) {
           logger.error(e.message);
+        } finally {
+          await burn(pickedTemplateParts.code, member.email);
         }
-        await burn(pickedTemplateParts.code, member.email);
       }
     });
   },
