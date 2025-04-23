@@ -1,6 +1,7 @@
 import fs from "fs";
 import YAML from "yaml";
 import { z } from "zod";
+import { type Config } from "../types";
 
 const yaml = (configFileName: string): Config => {
   if (!fs.existsSync(configFileName)) {
@@ -35,12 +36,14 @@ const yaml = (configFileName: string): Config => {
 };
 
 const configSchema = z.object({
+  schedule: z.string(),
   mail: z.object({
     from_name: z.string(),
     from_email: z.string(),
     mj_template_id: z.number(),
     mj_api_key: z.string(),
     mj_api_secret: z.string(),
+    bcc: z.array(z.string()).optional(),
   }),
   team: z.array(
     z.object({

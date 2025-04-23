@@ -16,9 +16,11 @@ export type Mail = {
   mjTemplateId: number;
   mjApiKey: string;
   mjApiSecret: string;
+  bcc: string[];
 };
 
 export type Config = {
+  schedule: string;
   mail: Mail;
   team: TeamMember[];
 };

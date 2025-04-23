@@ -9,7 +9,7 @@ const send = async ({
   mjApiKey,
   mjApiSecret,
   body,
-}: SendParams): Promise<object> => {
+}: SendParams): Promise<JSON> => {
   const fetchResult = await fetch("https://api.mailjet.com/v3.1/send", {
     method: "POST",
     headers: {
@@ -44,14 +44,7 @@ const createPayload = (
             Name: member.fullName,
           },
         ],
-        /*
-        Bcc: [
-          {
-            Email: env.mail.fromEmail,
-            Name: env.mail.fromName,
-          },
-        ],
-        */
+        Bcc: [...(mail.bcc ? mail.bcc.map((email) => ({ Email: email })) : [])],
         TemplateID: mail.mjTemplateId,
         TemplateLanguage: true,
         Subject: `İyi ki varsın ${templateParams.firstname}`,
