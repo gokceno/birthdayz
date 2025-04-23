@@ -60,10 +60,9 @@ const send = command({
           logger.debug(body);
           logger.debug(JSON.stringify(mjResponse));
           logger.info(`Message sent to ${member.email}`);
+          await burn(pickedTemplateParts.code, member.email);
         } catch (e: any) {
           logger.error(e.message);
-        } finally {
-          await burn(pickedTemplateParts.code, member.email);
         }
       }
     });
