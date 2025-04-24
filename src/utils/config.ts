@@ -43,7 +43,7 @@ const configSchema = z.object({
     mj_template_id: z.number(),
     mj_api_key: z.string(),
     mj_api_secret: z.string(),
-    bcc: z.array(z.string()).optional(),
+    bcc: z.array(z.string().email()).optional(),
   }),
   team: z.array(
     z.object({
